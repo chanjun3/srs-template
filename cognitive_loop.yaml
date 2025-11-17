@@ -1,0 +1,50 @@
+# ===========================================================
+# cognitive_loop.yaml
+# AIエージェント思考ワークフロー定義ファイル
+# ===========================================================
+
+workflow:
+  name: "PhD_Cognitive_Loop"
+  description: "博士課程的思考柔軟性を持つAIエージェントのワークフロー"
+  version: "1.0"
+
+stages:
+  - id: "planner"
+    name: "思考初期化フェーズ"
+    agent: "PlannerAgent"
+    task: "ユーザー入力から問いを定義する"
+    output: "defined_question.json"
+    trigger: "user_input"
+
+  - id: "critic"
+    name: "仮説再評価フェーズ"
+    agent: "CriticAgent"
+    task: "前提を再検証し、代替仮説を生成する"
+    output: "reframed_hypothesis.json"
+    trigger: "auto"
+
+  - id: "coder"
+    name: "言語化フェーズ"
+    agent: "CoderAgent"
+    task: "思考をJSON構造で記述し、因果関係を可視化する"
+    output: "structured_thought.md"
+    trigger: "critic_complete"
+
+  - id: "reviewer"
+    name: "反論統合フェーズ"
+    agent: "ReviewerAgent"
+    task: "反論と改善提案を生成し、信頼度を評価する"
+    output: "counter_argument.md"
+    trigger: "auto"
+
+  - id: "research"
+    name: "展開フェーズ"
+    agent: "ResearchAgent"
+    task: "新しい問いや研究テーマを生成する"
+    output: "emergent_questions.yaml"
+    trigger: "reviewer_complete"
+
+metadata:
+  save_to: "Notion_DB: Cognitive_Trace"
+  retrain_on: true
+  logging: true

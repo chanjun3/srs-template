@@ -1,0 +1,23 @@
+# training_workflow.yaml
+workflow: ReinforceTrainerPipeline
+triggers:
+  - cron: "0 3 * * *"
+  - event: "quality_drop"
+steps:
+  - id: collect_logs
+    run: "python tools/collect_logs.py --out data/execution_log.jsonl"
+  - id: build_rewards
+    run: "python tools/make_rewards.py --in data/execution_log.jsonl --cfg reward_config.yaml --out data/rewards.parquet"
+  - id: episodeize
+    run: "python tools/episodes.py --in data/rewards.parquet --out data/episodes.parquet --window '1d'"
+  - id: train_meta_policy
+    run: "python tools/train_meta.py --episodes data/episodes.parquet --out artifacts/policy.yaml"
+  - id: canary
+    run: "python tools/canary_run.py --policy artifacts/policy.yaml --traffic 0.05 --metrics out/canary_metrics.json"
+  - id: gate
+    run: "python tools/gatekeeper.py --metrics out/canary_metrics.json --cfg reward_config.yaml"
+  - id: publish
+    when: "gatekeeper == PASS"
+    run: "python tools/publish_policy.py --policy artifacts/policy.yaml --registry registry.json --sign policy.sig"
+  - id: write_knowledge
+    run: "python tools/write_to_notion.py --metrics out/canary_metrics.json --policy artifacts/policy.yaml"

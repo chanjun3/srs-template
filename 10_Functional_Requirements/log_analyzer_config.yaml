@@ -1,0 +1,40 @@
+
+log_analyzer_config.yaml
+
+metrics:
+
+name: task_success_rate
+description: 成功タスクの割合
+threshold_warn: 0.90
+threshold_critical: 0.80
+
+name: avg_latency_ms
+description: 平均処理時間
+threshold_warn: 15000
+threshold_critical: 25000
+
+name: avg_quality_score
+description: 品質スコア
+threshold_warn: 0.75
+threshold_critical: 0.65
+
+name: retry_count
+description: 再試行回数
+threshold_warn: 2
+threshold_critical: 4
+
+name: avg_cost_per_token
+description: コスト効率
+threshold_warn: 0.0025
+threshold_critical: 0.0035
+
+output:
+metrics_file: "metrics.jsonl"
+reward_input: "reward_input.parquet"
+anomaly_report: "anomaly_report.md"
+
+notifications:
+on_anomaly: true
+channels:
+- slack
+- email

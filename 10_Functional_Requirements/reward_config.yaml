@@ -1,0 +1,19 @@
+# reward_config.yaml
+reward:
+  weights:
+    task_success:     1.0
+    latency_gain:     0.5
+    cost_efficiency:  0.4
+    quality_score:    0.8
+    retry_penalty:   -0.6
+    incident:        -2.0
+  baselines:
+    latency_ms: 15000
+    cost_per_unit: 0.002
+  thresholds:
+    canary_promote_delta:
+      quality_score:  +0.02
+      cost_efficiency: +0.01
+    rollback_on:
+      incident: true
+      success_rate: 0.85
