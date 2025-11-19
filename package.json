@@ -1,0 +1,13 @@
+{
+  "name": "srs-template",
+  "version": "1.0.0",
+  "description": "Documentation + SRS template with lint and CI automation.",
+  "private": true,
+  "scripts": {
+    "lint:md": "markdownlint-cli2 README.md CHANGELOG.md docs/**/*.md"
+  },
+  "devDependencies": {
+    "markdownlint-cli2": "^0.13.0",
+    "markdownlint-cli2-formatter-default": "^0.0.6"
+  }
+}

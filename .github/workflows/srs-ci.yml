@@ -1,0 +1,36 @@
+name: SRS CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Markdownlint
+        uses: DavidAnson/markdownlint-cli2-action@v15
+        with:
+          globs: |
+            **/*.md
+
+      - name: Yamllint
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          config_file: .yamllint.yaml
+          file_or_dir: .
+
+      - name: Link check
+        uses: lycheeverse/lychee-action@v1.6.1
+        with:
+          args: >-
+            --no-progress
+            --exclude "https://github.com/.+"
+            --accept 200,403
+            **/*.md
+            **/*.yaml
+            **/*.yml
