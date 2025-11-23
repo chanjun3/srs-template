@@ -39,10 +39,12 @@ For a searchable list of every artefact see [`docs/catalog.md`](docs/catalog.md)
 
 ## Workflow
 1. Install dependencies (Markdown lint and formatter).
+
    ```bash
    npm install
    ```
 2. Run lint before submitting changes.
+
    ```bash
    npm run lint:md
    ```
