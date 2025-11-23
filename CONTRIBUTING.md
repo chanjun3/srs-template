@@ -11,13 +11,16 @@ propose SRS changes or add localised specifications.
   Do not force-push or delete backup branches.
 
 ## Workflow
+
 1. Branch from `main` using the naming convention above.
 2. Apply your documentation or config changes.
 3. Run the linters locally:
+
    ```bash
    npm run lint:md
    yamllint .
    ```
+
 4. Open a pull request targeting `main`.
 5. Request review from at least one maintainer; only merge after CI (markdownlint,
    yamllint, lychee) is green.
