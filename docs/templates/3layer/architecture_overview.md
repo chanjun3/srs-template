@@ -593,6 +593,7 @@ Gate 設計（どこまで自動にするか）
 に集中し、手を動かす作業 はエージェントに寄せる のが理想。
 
 5. Architecture Diagram (Mermaid)
+
 graph TB
 
   subgraph A[3-Layer Data Pipeline]
@@ -648,6 +649,7 @@ graph TB
   G --> B5
   G --> B1
   O --> G
+
 
 6. Scope / Non-goals
 6.1 Scope（このドキュメントがカバーすること）
