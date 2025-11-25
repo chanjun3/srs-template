@@ -50,6 +50,7 @@ E --> A
 subgraph Cognitive Loop
 B --> C --> D --> E --> B
 end
+```
 5. 適用範囲（Scope of Application）
 対象エージェント    適合度    想定利用ケース
 PolicyArchitect    ★★★★★    政策・業界分析。仮説立案と再構成が主軸。

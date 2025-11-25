@@ -29,21 +29,25 @@ Learning    結果DB化・機械学習・強化学習    ReinforceTrainerAgent  
 4️⃣ データ設計（Data Design）
 
 入力データ
+
 - Google Trends API
 - NewsAPI / RSS / SNSスクレイピング
 - 社内レポート / KPIログ
 
 出力データ
+
 - Notion / Firestore / Supabase DB
 - 各Agent成果物（JSON構造）
 
 特徴量例
+
 - 話題出現頻度
 - 感情スコア（positive/neutral/negative）
 - 発信反応率・滞在時間
 - 学習報酬値（Reward Metric）
 
 5️⃣ ワークフロー構成（Workflow）
+
 - id: trend_tracking
   agent: DataFetcherAgent
   schedule: daily
@@ -72,11 +76,13 @@ Learning    結果DB化・機械学習・強化学習    ReinforceTrainerAgent  
 6️⃣ 機械学習・強化学習モジュール（ML / RL）
 
 ML:
+
 - LSTM / Prophet による時系列予測
 - トピッククラスタリング（KMeans, LDA）
 - 感情分析（Transformer-based Sentiment Model）
 
 RL:
+
 - 報酬関数：
   Reward = CTR * EngagementRate - CostPenalty
 - 行動空間：
@@ -85,6 +91,7 @@ RL:
   PPO / DQN / Bandit など適用
 
 7️⃣ 知識循環（Knowledge Feedback Loop）
+
 - 収集 → 分析 → 発信 → 結果DB → 学習 → 再実行
 - 成果物はすべてNotion DBに自動保存
 - AnalyzerAgentが次サイクル時にDBを参照し再学習
@@ -98,14 +105,17 @@ RL:
 組織AIリテラシー    自動処理範囲    70%以上自律化
 
 9️⃣ セキュリティ・ガバナンス（Security & Governance）
+
 - 個人情報・社内データは学習対象外
 - AI学習に使うのは匿名化・要約済みデータのみ
 - データ保持期間・利用ルールを明示し自動削除
 
 🔟 今後の拡張（Future Scope）
+
 - ChatGPT Agents APIとの直結で自律制御
 - 社員教育モード（AIトレーニング教材自動生成）
 - 外部クライアント企業へのAIリテラシー導入支援サービス展開
 
 📂 保存先
 docs/assurance/AI_Literacy_Development_System_SRS.md
+

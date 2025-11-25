@@ -3,7 +3,7 @@
 Each subdirectory contains a self-contained SRS package for a specific agent or
 system. Convention:
 
-```
+```text
 docs/case-studies/<slug>/
   README.md        # canonical SRS for the case
   assets/          # (optional) diagrams or supporting files

@@ -8,6 +8,7 @@ Codex CLI、GitHub Actions、Docker、Codex SDKを統合した自動化された
 ---
 
 ## 2. 設計方針
+
 - **マイクロサービス構造**
   各機能を独立したAgent（fetch、summarize、score、notionなど）として分離し、再利用可能にする。
 - **ステートレス設計**
@@ -22,6 +23,7 @@ Codex CLI、GitHub Actions、Docker、Codex SDKを統合した自動化された
 ---
 
 ## 3. デプロイフロー概要
+
 1. **Codex CLI**
    ローカル環境でコーディングと初期テストを実施。
 2. **GitHubリポジトリ**
@@ -36,6 +38,7 @@ Codex CLI、GitHub Actions、Docker、Codex SDKを統合した自動化された
 ---
 
 ## 4. CI/CDワークフロー例
+
 ```yaml
 name: ci-cd-pipeline
 on:

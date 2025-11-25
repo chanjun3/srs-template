@@ -77,11 +77,13 @@ OrchestratorAgent の監視下で動作し、品質・効率・安定性を定�
 主要メトリクスと閾値を定義。異常検知・報酬生成に利用。
 
 7. 出力成果物
+
 ファイル名    内容
 metrics.jsonl    各Agentの集計指標
 reward_input.parquet    ReinforceTrainerAgent への入力
 anomaly_report.md    異常レポート
 grafana_metrics.json    ダッシュボード可視化用
+
 8. 他モジュール連携
 
 OrchestratorAgent：ログ取得・イベント発火

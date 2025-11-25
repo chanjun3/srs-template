@@ -21,6 +21,7 @@ CodexによるAI駆動型開発を自動テスト・自動デプロイに統合�
 GitHub Actionsを中心に、自動化・観測・修復が循環する仕組みを確立。
 
 3. パイプライン全体構成（Architecture）
+
 構成要素
 要素    役割
 GitHub Actions    CI/CDの中核。Lint/Test/Build/Deployを自動化。
@@ -30,6 +31,7 @@ Notion DB    テスト結果・ビルドログ・メトリクスを記録し、�
 Codex CLI    各フェーズのコード生成・修正・統合を担う開発AI。
 
 4. CIフェーズ（Continuous Integration）
+
 4.1 実行トリガ
 
 pull_request → Lint / Unit Test
@@ -37,6 +39,7 @@ pull_request → Lint / Unit Test
 push to main → Integration Test / Build / Deploy
 
 4.2 Lint & Test ワークフロー
+
 name: Lint & Test (PR)
 on:
   pull_request:
@@ -47,6 +50,7 @@ jobs:
     uses: ./.github/workflows/reusable-lint-test.yml
 
 4.3 テスト基準
+
 種類    内容    実行タイミング
 Lint    コーディング規約違反チェック    PR時
 Unit Test    機能単体の正当性    PR時
@@ -54,12 +58,15 @@ Integration Test    API・DB連携動作    main merge時
 E2E Test    CI完了後に自動または手動    ステージング環境
 
 5. CDフェーズ（Continuous Deployment）
+
 5.1 Vercel 自動デプロイ
+
 vercel pull --yes --environment=production --token=
 vercel build --prod --token=
 vercel deploy --prebuilt --prod --token=
 
 5.2 Cloud Run 自動デプロイ
+
 gcloud run deploy policy-tracker-ai \
   --image "" \
   --region "" \
@@ -73,6 +80,7 @@ gcloud run deploy policy-tracker-ai \
 プロパティ：Title, Commit, Status, URL, BuildTime
 
 6. Dockerによる環境統一
+
 6.1 目的
 
 「ローカル・CI・本番」すべての環境差を排除。
@@ -80,14 +88,16 @@ gcloud run deploy policy-tracker-ai \
 再現性と可搬性を確保することで“壊れない品質”を保証。
 
 6.2 設計要件
+
 要件    内容
 ベースイメージ    node:20-alpine / python:3.11-slim
 ビルド構成    multi-stage buildで軽量化
-健康監視    HEALTHCHECK CMD curl -f http://localhost:8080/health
+健康監視    HEALTHCHECK CMD curl -f <http://localhost:8080/health>
 セキュリティ    OIDC認証、最小権限IAM運用
 キャッシュ最適化    npm/pip cacheを利用して高速化
 
 7. Codex開発プロセス統合要件
+
 7.1 開発方針
 
 Codex CLI（Chatモード）を活用し、SRS（要件定義）を分野ごとに分割してAIに指示。
@@ -97,6 +107,7 @@ Codex CLI（Chatモード）を活用し、SRS（要件定義）を分野ごと�
 統合段階：6分野の要件をまとめて投げ、整合性を最適化。
 
 7.2 指示テンプレート
+
 # Context
 Project: {project_name}
 Domain: {SRS Domain}
@@ -110,12 +121,13 @@ Refer to: {SRS_File.md} section "{section_title}"
 
 7.3 Codex統合フロー
 
-1️⃣ SRS分野別タスク → コード生成
-2️⃣ GitHub Actions → 自動テスト
-3️⃣ Codexへ統合指示 → 依存関係整合化
-4️⃣ Notionへ成果保存 → RAG連携
+1. SRS分野別タスク → コード生成
+2. GitHub Actions → 自動テスト
+3. Codexへ統合指示 → 依存関係整合化
+4. Notionへ成果保存 → RAG連携
 
 8. 品質保証要件（Quality Assurance）
+
 要素    要件内容
 自動テスト    全フェーズで自動実行（PR→Deploy）
 失敗検知    GitHub Actionsで失敗をSlack/Notion通知
@@ -132,6 +144,7 @@ System Requirements Specification Template を共通テンプレートとして�
 CI/CD設定、Notion同期、Dockerfileはテンプレートから再利用可能。
 
 10. 改訂履歴
+
 バージョン    日付    内容    作成者
 1.0    (日付)    初版作成    jun1_
 

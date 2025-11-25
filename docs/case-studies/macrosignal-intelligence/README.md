@@ -13,6 +13,7 @@ MacroSignal Intelligence System は、実体経済データ・株価・政策ニ
 **「市場の反応が一時的か構造的か」**を AI が判定する経済インテリジェンス基盤。
 
 **目的**
+
 - リセッション／一時調整の早期識別  
 - 政策インパクト（防衛・半導体・エネルギー等）の数値化  
 - 投資判断・事業戦略の両面で活用できる分析パイプライン構築
@@ -37,23 +38,27 @@ MacroSignal Intelligence System は、実体経済データ・株価・政策ニ
 ## 3️⃣ システム構成（Architecture）
 
 ### 📡 Data Layer
+
 - 政策ニュースRSS：METI / MOF / NHK ほか
 - 株価データAPI：yfinance / QUICK（将来）
 - 実体経済API：e-Stat / IMF / FRED
 - ファンダメンタル：決算短信 / IR（HTML/PDF → 抽出）
 
 ### 🧠 Intelligence Layer
+
 - LLM要約・意味抽出エージェント（JSON化・正規化）
 - Policy–Market Impact Analyzer（イベント研究）
 - Macro Lag Detector（実体経済ラグ分析）
 - Recession Classifier（構造的下落判定）
 
 ### 💾 Data Store
+
 - NotionDB（政策・業界インパクト管理、RAGメタ）
 - Firestore / Supabase（時系列DB）
 - BigQuery（マクロ統合分析／将来の大規模分析）
 
 ### 📊 Application Layer
+
 - 投資判断ダッシュボード（Grafana）
 - 経済シグナル自動レポート（週次PDF/Notion連携）
 - API連携（TradingView / Slack 通知）
@@ -80,21 +85,25 @@ MacroSignal Intelligence System は、実体経済データ・株価・政策ニ
 ## 5️⃣ モジュール要件
 
 ### 🧩 LLM要約・インパクト抽出
+
 - 政策ニュースを JSON 構造化  
 - 出力: `policy_topic, expected_industries, potential_beneficiaries, impact_score`  
 - 実装: GPT-5 / Codex CLI バッチ（重複排除、URLフィンガープリント）
 
 ### 📈 株価連動解析
+
 - yfinance で関連銘柄の 3D/5D リターン取得  
 - VAR / XGBoost で政策スコア→価格変動の寄与分解  
 - モデル更新の結果を Notion に返送（履歴版管理）
 
 ### 🧮 実体経済ラグ検出
+
 - e-Stat / FRED より月次データ取得（PMI/雇用/生産）  
 - 政策スコアと各系列の交差相関・ラグ分布を算出  
 - ヒートマップ可視化→先行/一致/遅行の分類テーブル生成
 
 ### 🧠 リセッション分類AI
+
 - 入力: 株価下落イベント + マクロ系列 + ニュース特徴量  
 - 出力: `temporary_correction / structural_recession / sentiment_shock`  
 - モデル: LSTM + 経済特徴量エンコーダ（SHAPで説明可能性）

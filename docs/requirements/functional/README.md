@@ -13,6 +13,7 @@ When you introduce a new block, document:
 3. Traceability to related NFR or integration requirements.
 
 ## Local SRS
+
 - [PlannerAgent](planner/Local_SRS.md)
 - [CriticAgent](critic/Local_SRS.md)
 - [CoderAgent](coder/Local_SRS.md)

@@ -31,12 +31,14 @@ Valuation Feedback Analyzer は、
 ## 3️⃣ 機能要件（Functional Requirements）
 
 ### (1) データ収集
+
 - EDINET / TDnet より決算・有報データ取得
 - yfinance より株価・出来高データ取得
 - 特許庁API・求人API（Indeed等）から企業活動指標を補足
 - e-Stat / IMF データと統合（景気との関連）
 
 ### (2) 指標生成
+
 | 指標名 | 説明 |
 |---------|------|
 | **ValuationMomentum** | 株価のトレンド強度と継続性 |
@@ -46,11 +48,13 @@ Valuation Feedback Analyzer は、
 | **ReflexivityIndex** | 株価→行動→成果→株価のループ強度 |
 
 ### (3) 学習・解析
+
 - LLMが企業ニュースを意味解析し、活動カテゴリを分類（投資／研究／採用／M&A）
 - XGBoost / LSTM による株価と企業行動の相関モデリング
 - 強化学習モデルで「期待 vs 実体」の報酬構造を学習
 
 ### (4) 出力形式
+
 JSON構造で以下を出力：
 ```json
 {

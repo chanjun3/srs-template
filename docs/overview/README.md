@@ -7,11 +7,13 @@ This folder hosts high-level narratives that set context for the entire programm
 - `glossary.md` – authoritative list of programme terminology.
 
 ## Architecture summary
+
 - Reference stack: Supabase (structured data) × Qdrant/Weaviate (vector search) × Notion (human UI).
 - Cognitive Loop: Pause & Reframe → Structured Articulation → Dialectical Defense → Forward Expansion.
 - Governance: Collector/Normalizer/Analyzer separation with configs under `docs/case-studies/config/`.
 
 ## Branch policy
+
 - `main` **must remain deployable**; only reviewed PRs are merged.
 - Any SRS change (global or local) requires a pull request with lint + CI green.
 - Hotfixes follow the same rule; no direct pushes to `main`.

@@ -6,6 +6,7 @@
 - **Author:** chanjun3
 
 ## 1. 概要（Overview）
+
 本ドキュメントは、policy-tracker-ai システムにおいて、  
 AIエージェントが思考プロセス（仮説・反論・展開など）を記録・学習するための  
 NotionDB構成設計およびデータスキーマ統一要件を定義する。
@@ -15,12 +16,14 @@ NotionDB構成設計およびデータスキーマ統一要件を定義する。
 最終的に「統合的な知的エコシステム」を形成すること。
 
 ## 2. 背景（Background）
+
 policy-tracker-ai では、ニュース・政策・業界情報を自律的に収集・要約・分析するAIエージェント群を運用している。  
 これらのエージェントは、それぞれ異なる認知フェーズと出力構造を持つため、  
 単一DBでの一元管理では、思考のトレーサビリティが損なわれる。  
 そのため、各エージェントが専用のNotionDBを持ち、JSONスキーマを統一してAPI経由で双方向連携する構成を採用する。
 
 ## 3. システム構成概要（System Architecture Overview）
+
 ```mermaid
 graph TD
   A[PlannerAgent DB] --> Z[Master Knowledge Index DB]
@@ -35,6 +38,7 @@ Master Index DB：各DBのメタ情報を集約し、検索・再学習を効率
 
 VectorDB層：全体の知識をEmbedding化し、再推論素材として活用
 
+
 4. エージェント別 NotionDB 要件
 エージェント    フェーズ    主目的    記録内容    対応スキーマ
 PlannerAgent    思考初期化    ゴール定義とタスク計画    問いの定義・目的・優先度    planner_payload_schema.json
@@ -44,6 +48,7 @@ ReviewerAgent    反論統合    批判的視点からの再評価    反論・�
 ResearchAgent    展開創出    新しい仮説・テーマの創出    emergent questions・知識拡張    research_payload_schema.json
 
 5. データ連携構造（Data Flow）
+
 5.1 YAML × JSON の統合モデル
 層    役割    ファイル例
 YAML層    ワークフロー定義（処理順序）    .codex/config.yaml
@@ -56,8 +61,11 @@ graph TD
   Y[YAML Workflow] --> J[JSON Payloads]
   J --> N[NotionDB]
   N --> V[VectorDB]
+
 6. JSONスキーマ統一方針（Schema Standardization Policy）
+
 6.1 統一ルール
+
 **キー名（Key）**は全エージェント共通化（title, summary, category, confidence, timestamp）
 
 **値の型（Type）**はNotionのプロパティ型に対応
@@ -67,6 +75,7 @@ graph TD
 NotionDBのプロパティ名 = JSONキー名 とする
 
 6.2 サンプル構造
+
 JSON出力例
 
 json
@@ -79,6 +88,7 @@ json
   "source": "Digital Agency RSS",
   "timestamp": "2025-11-07T09:00:00Z"
 }
+
 対応する NotionDB プロパティ
 
 プロパティ    型    内容
