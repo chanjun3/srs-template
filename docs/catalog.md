@@ -1,7 +1,9 @@
 # Documentation catalogue
 
-Curated inventory of every artefact that now lives under `docs/` (plus referenced configs).
-Use this table to cross-link PRDs, find canonical SRS, or delegate reviews by role.
+Curated inventory of every artefact that now lives under `docs/` (plus referenced
+configs).
+Use this table to cross-link PRDs, find canonical SRS, or delegate reviews by
+role.
 
 | Domain | Artefact | Path | Notes |
 | --- | --- | --- | --- |
@@ -39,4 +41,5 @@ Use this table to cross-link PRDs, find canonical SRS, or delegate reviews by ro
 | Config | Reward Config | `docs/case-studies/config/reward_config.yaml` | Reinforcement tunes for trainer / planner agents. |
 | Config | Training Workflow | `docs/case-studies/config/training_workflow.yaml` | Standardized training pipeline description. |
 
-> ℹ️ Keep this catalogue alphabetized inside each domain to minimise merge conflicts.
+> ℹ️ Keep this catalogue alphabetized inside each domain to minimise merge
+> conflicts.
