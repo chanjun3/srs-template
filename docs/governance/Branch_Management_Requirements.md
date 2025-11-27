@@ -78,4 +78,3 @@ yaml
 ## Reference
 
 - docs/spec_os/srs.md
-

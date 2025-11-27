@@ -1,6 +1,7 @@
 # クラウドネイティブ・デプロイ戦略
 
 ## 1. 概要
+
 本ドキュメントは、AIエージェントプロジェクト（例：*policy-tracker-ai*, *job-tracker-ai*）における
 クラウドネイティブな開発・デプロイ戦略を定義する。
 Codex CLI、GitHub Actions、Docker、Codex SDKを統合した自動化されたDevOpsパイプラインを採用する。

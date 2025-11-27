@@ -12,4 +12,3 @@ global change log when introducing new assurance mechanisms.
 ## Reference
 
 - docs/spec_os/srs.md
-

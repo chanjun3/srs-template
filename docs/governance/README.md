@@ -12,4 +12,3 @@ cross-functional stakeholders know their responsibilities.
 ## Reference
 
 - docs/spec_os/srs.md
-

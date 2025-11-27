@@ -122,7 +122,7 @@ Refer to: {SRS_File.md} section "{section_title}"
 
 {具体的な指示内容}
 
-### 7.3 Codex統合フロー
+## 7.3 Codex統合フロー
 
 1. SRS分野別タスク → コード生成
 1. GitHub Actions → 自動テスト
@@ -162,7 +162,6 @@ AI駆動の完全自動化パイプラインの設計思想を定義する。
 💾 保存場所：
 C:\Users\jun1_\Desktop\System Requirements Specification Template\50_Quality_Assurance\CI_CD_Pipeline_SRS.md
 
-## Reference
+## Reference Links
 
 - docs/spec_os/srs.md
-

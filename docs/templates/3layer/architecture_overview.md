@@ -1,9 +1,10 @@
 Architecture Overview
-1. Purpose
+
+1\. Purpose
 
 このドキュメントは、srs-template プロジェクトにおけるアーキテクチャの「共通の頭の中」を定義するためのものです。
 
-2. Background
+2\. Background
 2.1 SRS-first な前提
 
 このリポジトリは「SRS がソースコードよりも先に存在する」という前提で動きます。
@@ -36,7 +37,7 @@ Storage & Analysis Layer
 Multi-Agent OS から見ると、この 3 層は 「現実世界の状態を観測するためのセンサ」 です。
 逆に 3 層から見ると、Multi-Agent OS は 「観測結果に応じて自動アクションを起こすコントローラ」 になります。
 
-3. Industry 3-Layer Architecture (A)
+3\. Industry 3-Layer Architecture (A)
 3.1 Collector Layer
 3.1.1 役割
 
@@ -248,7 +249,7 @@ Alerting / Rule Engine
 
 として見えるので、ここに載せたい指標 = 何をプロダクトの価値と定義するか という議論とセットで設計すると良い。
 
-4. chanjun3 Multi-Agent OS Architecture (B)
+4\. chanjun3 Multi-Agent OS Architecture (B)
 4.1 OS Kernel Concept (SRS-first)
 4.1.1 コンセプト
 
@@ -592,7 +593,7 @@ CI / Auto-Gate：合格すれば自動マージ、NG なら Orchestrator に戻�
 Gate 設計（どこまで自動にするか）
 に集中し、手を動かす作業 はエージェントに寄せる のが理想。
 
-5. Architecture Diagram (Mermaid)
+5\. Architecture Diagram (Mermaid)
 
 graph TB
 
@@ -650,8 +651,7 @@ graph TB
   G --> B1
   O --> G
 
-
-6. Scope / Non-goals
+6\. Scope / Non-goals
 6.1 Scope（このドキュメントがカバーすること）
 
 3-Layer データパイプラインの 論理構造
@@ -678,7 +678,7 @@ Planner / Researcher / Coder / Critic / Reviewer / Orchestrator の 役割と関
 
 セキュリティ設計のすべて（全体方針のみで、詳細は別ドキュメント）
 
-7. Risks & Mitigation
+7\. Risks & Mitigation
 7.1 SRS と実装の乖離
 
 Risk
@@ -759,7 +759,7 @@ Orchestrator の可視化ダッシュボードを用意
 
 各レイヤ / コンポーネントごとに Owner と責任範囲 を明確化
 
-8. Versioning Rules
+8\. Versioning Rules
 8.1 バージョン表記
 
 この architecture_overview.md および関連 SRS は、以下のような SemVer 風バージョン を推奨します。

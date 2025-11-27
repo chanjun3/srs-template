@@ -11,13 +11,16 @@ role.
 | Overview | AI Cognitive Framework Report | `docs/overview/AI_Cognitive_Framework_Report.md` | Vision deck for recursive reasoning loops. |
 | Templates · 3-layer | Architecture Overview | `docs/templates/3layer/architecture_overview.md` | Diagram + description of the reference 3-layer stack. |
 | Templates · 3-layer | Functional Requirements | `docs/templates/3layer/functional_requirements.md` | Feature-level contract for the reference implementation. |
-| Templates · 3-layer | Non-Functional Requirements | `docs/templates/3layer/non_functional_requirements.md` | SLAs, observability, and compliance for the template. |
+| Templates · 3-layer | Non-Functional Requirements | `docs/templates/3layer/non_functional_requirements.md` | SLAs, observability, and compliance |
+|   |   |   | for the template. |
 | Templates · 3-layer | Integration Requirements | `docs/templates/3layer/integration_requirements.md` | API / event bus integration handshake. |
 | Templates · 3-layer | Data Schema | `docs/templates/3layer/data_schema.md` | Canonical storage layout for telemetry + state. |
 | Templates · 3-layer | Quality Assurance | `docs/templates/3layer/quality_assurance.md` | Validation and release gate checklist. |
-| Requirements · Non-functional | Cloud Native Deployment Strategy | `docs/requirements/non-functional/cloud_native_deployment_strategy.md` | Tactical platform guidance. |
+| Requirements · Non-functional | Cloud Native Deployment Strategy | `docs/requirements/non-functional/cloud_native_deployment_strategy.md` |   |
+|   |   |   | Tactical platform guidance. |
 | Requirements · Data | Cognitive Logging Architecture | `docs/requirements/data/CognitiveLoggingArchitecture.md` | Logging + analytics reference design. |
-| Requirements · Integration | Serverless Execution Architecture | `docs/requirements/integration/Serverless_Execution_Architecture.md` | Integration profile for serverless surfaces. |
+| Requirements · Integration | Serverless Execution Architecture | `docs/requirements/integration/Serverless_Execution_Architecture.md` |   |
+|   |   |   | Integration profile for serverless surfaces. |
 | Requirements · Functional | PlannerAgent Local SRS | `docs/requirements/functional/planner/Local_SRS.md` | Task decomposition contract. |
 | Requirements · Functional | CriticAgent Local SRS | `docs/requirements/functional/critic/Local_SRS.md` | Review criteria aligned with QA/governance. |
 | Requirements · Functional | CoderAgent Local SRS | `docs/requirements/functional/coder/Local_SRS.md` | Implementation guardrails for code changes. |

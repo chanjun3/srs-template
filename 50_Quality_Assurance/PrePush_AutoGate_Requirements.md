@@ -2,13 +2,16 @@
 
 ## 1. Purpose
 
-- Pre-push auto-gate enforces spec-first quality gates before any branch leaves a developer workstation, protecting SRS, policy-tracker-ai, and sibling repos from inconsistent or unsafe commits.
+- Pre-push auto-gate enforces spec-first quality gates before any branch leaves a developer workstation,
+  protecting SRS, policy-tracker-ai, and sibling repos from inconsistent or unsafe commits.
 - The hook and its centrally managed PowerShell script keep AI agent workflows deterministic and auditable, ensuring Codex-aligned automation can rely on clean baselines.
 
 ## 2. Scope
 
-- Applies to repositories: SRS (primary), policy-tracker-ai, and any downstream workspace inheriting Codex QA governance.
-- Covers `.git/hooks/pre-push` hook invocation, delegated PowerShell orchestration, and required lint/test utilities but excludes infrastructure beyond local workstation execution.
+- Applies to repositories: SRS (primary), policy-tracker-ai, and any downstream workspace inheriting Codex QA
+  governance.
+- Covers `.git/hooks/pre-push` hook invocation, delegated PowerShell orchestration, and required lint/test
+  utilities but excludes infrastructure beyond local workstation execution.
 
 ## 3. Definitions
 
@@ -74,5 +77,4 @@
 
 | Version | Date | Author | Notes |
 | --- | --- | --- | --- |
-| 0.1 | 2025-11-18 | Codex Agent | Initial creation of Pre-Push / Pre-Check Auto-Gate Requirements (Priority P1).
-
+| 0.1 | 2025-11-18 | Codex Agent | Initial creation of Pre-Push / Pre-Check Auto-Gate Requirements (Priority P1). |

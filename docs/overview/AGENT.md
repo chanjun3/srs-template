@@ -1,6 +1,7 @@
 # AGENT Role Spec
 
 ## 1. Overview
+
 このドキュメントは、`docs/templates/3layer/architecture_overview.md` と
 `docs/templates/3layer/functional_requirements.md` に定義された Multi-Agent OS の世界観における公式「役割仕様書 (Agent Role Spec)」である。
 SRS 群（FR/TR/AR）は OS カーネルとして共通ポリシーと API を提供し、Planner / Coder / Reviewer などのエージェントはユーザランドプロセスとして、そのカーネルが許容した権限範囲内で Plan → Code → Review → Deploy → Observe ループに従う。

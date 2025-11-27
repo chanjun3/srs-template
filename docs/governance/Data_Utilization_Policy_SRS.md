@@ -53,4 +53,3 @@ Version: 1.0
 ## Reference
 
 - docs/spec_os/srs.md
-

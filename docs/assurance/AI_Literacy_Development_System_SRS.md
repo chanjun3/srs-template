@@ -119,8 +119,6 @@ RL:
 📂 保存先
 docs/assurance/AI_Literacy_Development_System_SRS.md
 
-
 ## Reference
 
 - docs/spec_os/srs.md
-

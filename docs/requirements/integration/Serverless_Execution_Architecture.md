@@ -19,5 +19,5 @@
 ---
 
 ## ✅ 保存先
-`/30_Integration_Requirements/Serverless_Execution_Architecture.md`
 
+`/30_Integration_Requirements/Serverless_Execution_Architecture.md`
