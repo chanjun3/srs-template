@@ -30,3 +30,7 @@ Planner / Critic / Coder / Reviewer など複数エージェントを統括し�
 
 - `docs/templates/3layer/integration_requirements.md`
 - `docs/requirements/data/CognitiveLoggingArchitecture.md`
+
+## Reference (Global SRS)
+
+- docs/spec_os/srs.md

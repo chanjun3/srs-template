@@ -1,4 +1,5 @@
 # AI Cognitive Loop Requirements  
+
 **Version:** 1.0  
 **Author:** chanjun3  
 **Date:** 2025-11-07  
@@ -51,7 +52,9 @@ subgraph Cognitive Loop
 B --> C --> D --> E --> B
 end
 ```
-5. 適用範囲（Scope of Application）
+
+## 5. 適用範囲（Scope of Application）
+
 対象エージェント    適合度    想定利用ケース
 PolicyArchitect    ★★★★★    政策・業界分析。仮説立案と再構成が主軸。
 ResearchAgent    ★★★★★    研究テーマ構築・論文解析。批判的再設計型。
@@ -59,7 +62,8 @@ PlannerAgent    ★★★★☆    目標設定・戦略立案フェーズで活
 CoderAgent    ★★★☆☆    設計判断やアルゴリズム選定時のみ使用。
 OperatorAgent    ★☆☆☆☆    実行タスク主体のため非適用。
 
-6. 運用要件（Operational Workflow）
+## 6. 運用要件（Operational Workflow）
+
 フェーズ    担当エージェント    出力    トリガー条件
 思考初期化    PlannerAgent    問いの定義    ユーザー入力時
 仮説再評価    CriticAgent    代替仮説生成    自動
@@ -67,7 +71,8 @@ OperatorAgent    ★☆☆☆☆    実行タスク主体のため非適用。
 反論統合    ReviewerAgent    改善提案・信頼度    自動
 展開創出    ResearchAgent    新しい問い    Reviewer完了時
 
-7. 保存・実行設定（Integration Configuration）
+## 7. 保存・実行設定（Integration Configuration）
+
 この要件に基づくワークフロー定義は以下のYAMLファイルで管理する：
 
 コードをコピーする
@@ -76,7 +81,8 @@ docs/case-studies/config/
 Codex CLI または GitHub Actions で呼び出し可能。
 Notion DBへ自動ログ記録を行い、思考トレースを可視化。
 
-8. 期待される成果（Expected Outcome）
+## 8. 期待される成果（Expected Outcome）
+
 再帰的思考ログ（Cognitive Trace Log）
 各フェーズの中間出力を履歴化し、RAGに再利用。
 
@@ -86,17 +92,22 @@ Notion DBへ自動ログ記録を行い、思考トレースを可視化。
 創発的問いリスト（Emergent Questions）
 次の研究・開発テーマ候補を自動生成。
 
-9. 拡張提案（Future Extensions）
+## 9. 拡張提案（Future Extensions）
+
 self_alignment.yaml との連携で自己評価ループを構築
 
 cognitive_loop.yaml を CI/CD ワークフローに統合
 
 GitHub Actions による「思考ループ検証テスト」自動化
 
-10. まとめ（Summary）
+## 10. まとめ（Summary）
+
 この仕様は、AIエージェントに博士課程的知的フローを実装することで、
 単なる出力装置から「自律的な知的存在」へ進化させる基礎である。
 
 🧬 AIが考え、批判し、進化する。
 それが本仕様の目指す知的OS構造である。
 
+## Reference
+
+- docs/spec_os/srs.md

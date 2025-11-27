@@ -31,3 +31,7 @@
 
 - `docs/requirements/data/` 以下のデータ関連 SRS
 - `docs/overview/AI_Cognitive_Framework_Report.md`
+
+## Reference (Global SRS)
+
+- docs/spec_os/srs.md

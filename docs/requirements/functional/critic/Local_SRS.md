@@ -30,3 +30,7 @@ Planner や Coder の出力をレビューし、Global SRS と矛盾がないか
 - `docs/templates/3layer/quality_assurance.md`
 - `docs/assurance/CI_CD_Pipeline_SRS.md`
 - `docs/governance/Branch_Management_Requirements.md`
+
+## Reference (Global SRS)
+
+- docs/spec_os/srs.md

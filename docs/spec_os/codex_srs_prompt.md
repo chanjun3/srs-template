@@ -8,7 +8,7 @@ Use the specification at the following source:
 .spec_sources:
   - repo: https://github.com/chanjun3/srs-template
     branch: main
-    path: .
+    path: docs/spec_os/srs.md
 
 If spec_sources is not available:
   Load SRS manually from:

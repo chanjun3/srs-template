@@ -74,3 +74,8 @@ yaml
 ---
 
 作成者: chanjun3  
+
+## Reference
+
+- docs/spec_os/srs.md
+

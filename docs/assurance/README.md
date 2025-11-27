@@ -8,3 +8,8 @@ pipelines. Present contents:
 
 Link test evidence (dashboards, coverage reports, etc.) from here or from the
 global change log when introducing new assurance mechanisms.
+
+## Reference
+
+- docs/spec_os/srs.md
+

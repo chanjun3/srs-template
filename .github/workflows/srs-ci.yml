@@ -12,17 +12,48 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Markdownlint
+      - name: Markdownlint (SRS 4.1)
         uses: DavidAnson/markdownlint-cli2-action@v15
         with:
           globs: |
             **/*.md
+          config_path: .markdownlint.yaml
 
-      - name: Yamllint
+      - name: Yamllint (SRS 4.2)
         uses: ibiqlik/action-yamllint@v3
         with:
           config_file: .yamllint.yaml
           file_or_dir: .
+
+      - name: JSON validation (SRS 4.3)
+        run: |
+          set -euo pipefail
+          files="$(git ls-files '*.json' || true)"
+          if [ -n "$files" ]; then
+            python - <<'PY' $files
+import json, pathlib, sys
+for path_str in sys.argv[1:]:
+    path = pathlib.Path(path_str)
+    data = path.read_text(encoding='utf-8')
+    try:
+        json.loads(data)
+    except json.JSONDecodeError as exc:
+        raise SystemExit(f"Invalid JSON ({path}): {exc}")
+PY
+          fi
+
+      - name: Python format (SRS 4.4)
+        run: |
+          set -euo pipefail
+          files="$(git ls-files '*.py' || true)"
+          if [ -n "$files" ]; then
+            python -m pip install --upgrade pip
+            pip install black flake8
+            black --check $files
+            flake8 $files
+          else
+            echo "No Python files detected."
+          fi
 
       - name: Link check
         uses: lycheeverse/lychee-action@v1.6.1

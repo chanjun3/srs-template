@@ -5,6 +5,8 @@ All notable changes to this repository will be documented in this file.
 The format roughly follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and uses ISO dates in JST.
 
+<!-- markdownlint-disable MD024 -->
+
 ## [2025-11-19]
 
 ### Added
@@ -28,6 +30,7 @@ and uses ISO dates in JST.
 
 - **Refactor: SRS structure normalization**
   - **Before**
+
     ```text
     .
     ├── cognitive_loop.yaml
@@ -38,7 +41,9 @@ and uses ISO dates in JST.
     ├── 40_Data_Requirements/
     └── 50_Quality_Assurance/
     ```
+
   - **After**
+
     ```text
     .
     ├── docs/

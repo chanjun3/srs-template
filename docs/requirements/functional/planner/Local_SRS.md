@@ -33,3 +33,7 @@
 - `docs/templates/3layer/architecture_overview.md`
 - `docs/templates/3layer/functional_requirements.md`
 - `docs/requirements/functional/` 以下の関連 SRS 各種。
+
+## Reference (Global SRS)
+
+- docs/spec_os/srs.md

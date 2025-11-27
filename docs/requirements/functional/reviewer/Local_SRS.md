@@ -30,3 +30,7 @@ Coder の出力を受け取り、コード品質・仕様準拠・テスト観�
 
 - `docs/templates/3layer/quality_assurance.md`
 - `docs/assurance/CI_CD_Pipeline_SRS.md`
+
+## Reference (Global SRS)
+
+- docs/spec_os/srs.md

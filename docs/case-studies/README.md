@@ -16,3 +16,7 @@ those files from your README instead of duplicating payloads.
 Current cases span collectors, log analysis, IaC alignment, macro research, and
 reinforcement learning flows. Use kebab-case for new slugs and update
 [`../catalog.md`](../catalog.md) accordingly.
+
+## Reference
+
+- docs/spec_os/srs.md

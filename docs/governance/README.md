@@ -8,3 +8,8 @@ version, and govern data. Current artefacts:
 
 When adding similar docs, include RACI tables or explicit ownership sections so
 cross-functional stakeholders know their responsibilities.
+
+## Reference
+
+- docs/spec_os/srs.md
+

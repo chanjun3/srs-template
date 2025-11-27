@@ -1,19 +1,23 @@
 # 🧭 System Requirements Specification (SRS)
+
 ## Cloud-Native基盤へのIaC化（Terraform + GitHub Actions）
 
 ---
 
 ### 1. 概要
+
 本ドキュメントは、Terraform と GitHub Actions を用いた Cloud-Native 環境へのデプロイ自動化に関する要件定義を示す。  
 目的は、chanjun3プロジェクト群（Policy-Tracker-AI、MacroSignal、AI Website Studioなど）における**インフラ環境の自動構築・管理・再現性向上**である。
 
 ---
 
 ### 2. 背景と目的
+
 現行の開発体制では、複数のAIエージェントがそれぞれ別環境上で稼働しており、環境構築手順が属人的かつ再現性に乏しい。  
 IaC化により、インフラ構成をコードで定義し、CI/CDとの統合によって、**迅速・安全・一貫したデプロイ**を実現する。
 
 #### 目的の要約
+
 - クラウド環境構成の自動化
 - デプロイ作業のヒューマンエラー削減
 - 環境の再現性・スケーラビリティ確保
@@ -24,6 +28,7 @@ IaC化により、インフラ構成をコードで定義し、CI/CDとの統合
 ### 3. システム構成概要
 
 #### 3.1 全体アーキテクチャ
+
 GitHub Repository
 ├── .github/workflows/deploy.yaml # CI/CDワークフロー定義
 ├── terraform/
@@ -36,6 +41,7 @@ yaml
 コードをコピーする
 
 #### 3.2 環境要素
+
 | 要素 | 内容 |
 |------|------|
 | **Terraform** | クラウドリソース構成の宣言的定義 |
@@ -93,6 +99,7 @@ yaml
 ---
 
 ### 8. 今後の拡張案（フェーズ2以降）
+
 | フェーズ | 概要 |
 |-----------|------|
 | IaC v1 | Terraform + GitHub Actionsで自動構成化 |
@@ -103,6 +110,7 @@ yaml
 ---
 
 ### 9. リスクと対策
+
 | リスク | 対策 |
 |---------|------|
 | Terraform State競合 | Locking機構（DynamoDB/GCS）を実装 |
@@ -113,6 +121,7 @@ yaml
 ---
 
 ### 10. 承認とバージョン管理
+
 | 項目 | 値 |
 |------|----|
 | 作成者 | chanjun3 |
@@ -122,3 +131,7 @@ yaml
 | 関連ドキュメント | IaC_Integration_Report.md, deploy.yaml, main.tf |
 
 ---
+
+## Reference
+
+- docs/spec_os/srs.md

@@ -49,3 +49,8 @@ Version: 1.0
 | Version | Date | Description |
 |----------|------|--------------|
 | 1.0 | (日付) | 初版作成 |
+
+## Reference
+
+- docs/spec_os/srs.md
+

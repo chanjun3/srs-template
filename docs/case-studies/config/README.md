@@ -12,3 +12,7 @@ here instead of beside each document to reduce duplication.
 
 When creating a new SRS that needs bespoke config, prefer referencing one of
 these or adding a new file in this directory.
+
+## Reference
+
+- docs/spec_os/srs.md

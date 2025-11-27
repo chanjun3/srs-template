@@ -1,4 +1,5 @@
 # 🧾 System Requirements Specification  
+
 **Module:** Valuation Feedback Analyzer  
 **Author:** jun1_  
 **Date:** 2025-10-30  
@@ -56,6 +57,7 @@ Valuation Feedback Analyzer は、
 ### (4) 出力形式
 
 JSON構造で以下を出力：
+
 ```json
 {
   "company": "例：三菱重工業",
@@ -67,7 +69,8 @@ JSON構造で以下を出力：
   "insight": "株価上昇により防衛関連設備投資が加速し、政策支援と連動。"
 }
 
-4️⃣ データモデル（Schema）
+## 4️⃣ データモデル（Schema）
+
 フィールド名    型    内容
 date    date    解析日
 company    text    企業名
@@ -78,13 +81,16 @@ execution_capacity    number    投資・雇用・R&Dスコア
 reflexivity_index    number    株価と企業行動の相互影響度
 classification    select    実体拡張 / 期待先行 / 成果乖離
 insight    text    AI生成の分析コメント
-5️⃣ ビジネス応用（Use Cases）
+
+## 5️⃣ ビジネス応用（Use Cases）
+
 分野    活用例
 💹 投資判断    株価上昇企業の中から「行動の裏付けがある銘柄」を抽出
 🧭 経営戦略    自社・競合の資金余力と投資行動をモニタリング
 🏦 政策分析    国策セクター内で“株価主導型成長”を検出
 🧩 RAG連携    「過去に似た企業行動を示したケース」をAIが照合して示唆生成
-6️⃣ モジュール構成
+## 6️⃣ モジュール構成
+
 ValuationFeedbackAnalyzer/
  ├─ collector.py                # 企業行動・IR・株価データ収集
  ├─ analyzer.py                 # 指標生成・相関分析
@@ -92,7 +98,7 @@ ValuationFeedbackAnalyzer/
  ├─ notion_sync.py              # NotionDB反映
  └─ config.yaml                 # スケジュール・閾値設定
 
-7️⃣ 根拠と展望（Rationale）
+## 7️⃣ 根拠と展望（Rationale）
 
 ソロスの「反射性理論」に基づき、市場と企業行動の双方向性をAIで定量化。
 
@@ -100,7 +106,7 @@ ValuationFeedbackAnalyzer/
 
 将来的には、企業行動→株価反応→景気波及を統合した強化学習モデルへ発展させる。
 
-8️⃣ 成果物出力
+## 8️⃣ 成果物出力
 
 📊 NotionDB「Corporate Intelligence DB」へ自動登録
 
@@ -108,7 +114,7 @@ ValuationFeedbackAnalyzer/
 
 📑 SRSテンプレート配下に markdown 要件として蓄積
 
-✨ 終章（Vision）
+## ✨ 終章（Vision）
 
 「株価は企業の通信簿ではなく、
 未来の行動計画書である。」
@@ -116,3 +122,7 @@ ValuationFeedbackAnalyzer/
 Valuation Feedback Analyzer は、
 期待と実体のギャップを測る知能として、
 経済の“意志”を理解するための羅針盤となる。
+
+## Reference
+
+- docs/spec_os/srs.md

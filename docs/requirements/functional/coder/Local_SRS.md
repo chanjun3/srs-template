@@ -32,3 +32,7 @@ Planner のタスクリストおよび Global SRS に基づき、コード / 設
 - `docs/templates/3layer/architecture_overview.md`
 - `docs/templates/3layer/data_schema.md`
 - `docs/governance/Data_Utilization_Policy_SRS.md`
+
+## Reference (Global SRS)
+
+- docs/spec_os/srs.md
