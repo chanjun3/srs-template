@@ -12,6 +12,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Node dependencies
+        run: npm ci
+
       - name: Markdownlint (SRS 4.1)
         uses: DavidAnson/markdownlint-cli2-action@v15
         with:
