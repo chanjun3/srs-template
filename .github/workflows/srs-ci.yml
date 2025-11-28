@@ -23,6 +23,8 @@ jobs:
         run: npm ci
 
       - name: Markdownlint (SRS 4.1)
+        id: markdownlint
+        continue-on-error: true
         uses: DavidAnson/markdownlint-cli2-action@v15
         with:
           globs: |
@@ -88,3 +90,9 @@ PY
           name: srs-ci-logs
           path: ${{ env.CI_SUMMARY_LOG }}
           if-no-files-found: error
+
+      - name: Fail job if Markdownlint failed
+        if: ${{ steps.markdownlint.outcome == 'failure' }}
+        run: |
+          echo "Markdownlint reported errors."
+          exit 1
