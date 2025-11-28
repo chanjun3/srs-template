@@ -74,10 +74,15 @@ PY
             **/*.yaml
             **/*.yml
 
+      - name: Generate CI summary log
+        if: always()
+        run: |
+          echo "CI workflow completed at $(date)" > ci-summary.log
+
       - name: Upload workflow logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: srs-ci-logs
-          path: ${{ runner.temp }}/_github_workflow/_logs
-          if-no-files-found: warn
+          path: ci-summary.log
+          if-no-files-found: error
