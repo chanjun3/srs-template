@@ -1,3 +1,5 @@
+
+
 srs-template — AI Agent OS System Requirements Catalogue
 
 Multi-agent / Cognitive Logging / Spec-First assets for the AI Agent OS.
@@ -17,11 +19,9 @@ Single Source of Truth (SoT): All downstream SRS or system deliveries must refer
 
 | Layer | Purpose & Notes | Anchor Paths / Examples |
 | --- | --- | --- |
-| 01 — Overview / Vision | Vision, cognitive strategy, conceptual framing for AI Agent OS. | docs/overview/ → AI_Agent_NotionDB_Architecture_Requirements.md |
-|   |   | docs/overview/ → AI_Cognitive_Framework_Report.md |
+| 01 — Overview / Vision | Vision, cognitive strategy, conceptual framing for AI Agent OS. | docs/overview/ → AI_Agent_NotionDB_Architecture_Requirements.md, AI_Cognitive_Framework_Report.md |
 | 02 — Reference Templates (3-layer) | Templates for architecture / functional / non-functional / integration / data / QA. | docs/templates/3layer/* |
-| 03 — Shared Requirements | Cross-agent functional / non-functional / integration / data requirements. | docs/requirements/* |
-|   | Includes Cognitive Logging Architecture. |   |
+| 03 — Shared Requirements | Cross-agent functional / non-functional / integration / data requirements. Includes Cognitive Logging Architecture. | docs/requirements/* |
 | 04 — Governance & Policy | Branch rules, data usage policy, access control, compliance. | docs/governance/* |
 | 05 — Case Studies & Config | Agent-specific SRS packages + shared YAML configs. | docs/case-studies/<slug>/, docs/case-studies/config/*.yaml |
 | 06 — Assurance & QA | CI/CD pipelines, AI literacy QA, assurance specs. | docs/assurance/* |
@@ -30,7 +30,6 @@ Searchable catalogue: docs/catalog.md
 (Keep catalogue alphabetized per domain to reduce merge conflicts.)
 
 ## 3. Repository Policy
-
 Single Source of Truth (SoT)
 
 This repo holds the authoritative versions of all specifications.
