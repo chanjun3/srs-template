@@ -9,6 +9,8 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
+    env:
+      CI_SUMMARY_LOG: ${{ github.workspace }}/ci-summary.log
     steps:
       - uses: actions/checkout@v4
 
@@ -77,12 +79,12 @@ PY
       - name: Generate CI summary log
         if: always()
         run: |
-          echo "CI workflow completed at $(date)" > "$GITHUB_WORKSPACE/ci-summary.log"
+          echo "CI workflow completed at $(date)" > "$CI_SUMMARY_LOG"
 
       - name: Upload workflow logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: srs-ci-logs
-          path: ${{ github.workspace }}/ci-summary.log
+          path: ${{ env.CI_SUMMARY_LOG }}
           if-no-files-found: error
