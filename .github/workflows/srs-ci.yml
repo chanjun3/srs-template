@@ -77,7 +77,7 @@ PY
       - name: Generate CI summary log
         if: always()
         run: |
-          echo "CI workflow completed at $(date)" > ci-summary.log
+          echo "CI workflow completed at $(date)" > "$GITHUB_WORKSPACE/ci-summary.log"
 
       - name: Upload workflow logs
         if: always()
