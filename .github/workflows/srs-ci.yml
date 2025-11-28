@@ -84,5 +84,5 @@ PY
         uses: actions/upload-artifact@v4
         with:
           name: srs-ci-logs
-          path: ci-summary.log
+          path: ${{ github.workspace }}/ci-summary.log
           if-no-files-found: error
