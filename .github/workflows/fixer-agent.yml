@@ -1,0 +1,52 @@
+name: FixerAgent
+
+on:
+  workflow_run:
+    workflows:
+      - SRS CI
+    types:
+      - completed
+
+jobs:
+  fixer:
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    env:
+      AUTO_FIX_ENABLED: ${{ vars.AUTO_FIX_ENABLED || 'true' }}
+    steps:
+      - name: Check if auto fix is enabled
+        run: |
+          if [ "${AUTO_FIX_ENABLED}" != "true" ]; then
+            echo "Auto fix disabled via repo variable."
+            exit 0
+          fi
+
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Download workflow logs
+        run: |
+          mkdir -p tmp/ci_logs
+          gh run download "${{ github.event.workflow_run.id }}" \
+            --repo "${{ github.repository }}" \
+            --dir tmp/ci_logs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run FixerAgent triage
+        run: |
+          python tools/fixer_agent/main.py \
+            --ci-workflow "${{ github.event.workflow_run.name }}" \
+            --job-name "${{ github.event.workflow_run.conclusion }}" \
+            --run-id "${{ github.event.workflow_run.id }}" \
+            --branch "${{ github.event.workflow_run.head_branch }}" \
+            --log-dir "tmp/ci_logs" \
+            --test-command "npm run lint:md" \
+            --dry-run

@@ -1,0 +1,38 @@
+name: ReviewerAgent
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    env:
+      AUTO_MERGE_ENABLED: ${{ vars.AUTO_MERGE_ENABLED || 'false' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run ReviewerAgent
+        run: |
+          if [ "${AUTO_MERGE_ENABLED}" != "true" ]; then
+            extra="--dry-run"
+          else
+            extra=""
+          fi
+          python tools/reviewer_agent/main.py \
+            --event-path "${{ github.event_path }}" \
+            --base-ref "origin/${{ github.event.pull_request.base.ref }}" \
+            $extra

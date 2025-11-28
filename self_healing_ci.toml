@@ -1,0 +1,10 @@
+[core]
+auto_fix_enabled = true
+auto_merge_enabled = false
+
+[limits]
+max_auto_patch_lines = 200
+blocked_paths = [
+  "docs/spec_os/srs.md",
+  "docs/spec_os/codex_srs_prompt.md"
+]
