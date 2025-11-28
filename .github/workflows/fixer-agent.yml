@@ -3,7 +3,7 @@ name: FixerAgent
 on:
   workflow_run:
     workflows:
-      - SRS CI
+      - Markdown lint
     types:
       - completed
 
