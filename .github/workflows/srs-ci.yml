@@ -79,5 +79,5 @@ PY
         uses: actions/upload-artifact@v4
         with:
           name: srs-ci-logs
-          path: ${{ runner.temp }}/_runner_file_commands
+          path: ${{ runner.temp }}/_github_workflow/_logs
           if-no-files-found: warn
