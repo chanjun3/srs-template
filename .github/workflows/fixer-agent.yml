@@ -36,6 +36,7 @@ jobs:
           mkdir -p tmp/ci_logs
           gh run download "${{ github.event.workflow_run.id }}" \
             --repo "${{ github.repository }}" \
+            --name "srs-ci-logs" \
             --dir tmp/ci_logs
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
