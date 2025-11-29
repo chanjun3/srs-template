@@ -2,90 +2,143 @@ from __future__ import annotations
 
 import argparse
 import os
-import pathlib
-import sys
-from datetime import datetime
+from pathlib import Path
+from typing import Dict, Optional
+import hashlib
 
-from .classifier import classify_failure
-from .config import SelfHealingConfig, load_config
-from .log_utils import write_json_log
-from .patch_planner import build_patch_plan
-from .srs_loader import load_srs
+from .artifact_loader import ArtifactLoader
+from .diff_generator import DiffGenerator
+from .models import PatchProposal, TriageResult, FaultCategory
+from .pr_builder import PRBuilder
+from .triage_engine import TriageEngine
+from .utils.logging_utils import log_info, log_warning, log_error, write_json_log
+from .utils.srs_validator import get_srs_digest
+
+GLOBAL_SRS = Path("docs/spec_os/srs.md")
+FIXER_SRS = Path("docs/spec_agents/FixerAgent_SRS.md")
 
 
 def parse_args() -> argparse.Namespace:
-  parser = argparse.ArgumentParser(description="FixerAgent - self-healing CI helper")
-  parser.add_argument("--ci-workflow", required=True, help="Name of the failed workflow.")
-  parser.add_argument("--job-name", required=True, help="Name of the failed CI job.")
-  parser.add_argument("--run-id", required=True, help="GitHub workflow run id.")
-  parser.add_argument("--branch", required=True, help="Branch where the failure occurred.")
-  parser.add_argument("--log-dir", default="tmp/ci_logs", help="Directory containing downloaded CI logs.")
-  parser.add_argument("--test-command", default="", help="Suggested command to re-run locally.")
-  parser.add_argument("--dry-run", action="store_true", help="Only record triage data without proposing a patch.")
-  return parser.parse_args()
+    parser = argparse.ArgumentParser(description="FixerAgent runtime")
+    parser.add_argument("--ci-workflow", required=True)
+    parser.add_argument("--job-name", required=True)
+    parser.add_argument("--run-id", required=True)
+    parser.add_argument("--branch", required=True)
+    parser.add_argument("--log-dir", default="tmp/ci_logs")
+    parser.add_argument("--test-command", default="")
+    parser.add_argument("--dry-run", action="store_true")
+    return parser.parse_args()
 
 
-def read_logs(log_dir: pathlib.Path, max_chars: int = 20000) -> str:
-  if not log_dir.exists():
-    return ""
-  content_parts: list[str] = []
-  for file in sorted(log_dir.rglob("*.txt")):
-    content = file.read_text(encoding="utf-8", errors="ignore")
-    content_parts.append(content)
-    if sum(len(part) for part in content_parts) >= max_chars:
-      break
-  return "\n\n".join(content_parts)[:max_chars]
+def _auto_fix_enabled() -> bool:
+    return os.getenv("AUTO_FIX_ENABLED", "true").lower() == "true"
+
+
+def _srs_metadata() -> Dict[str, str]:
+    return {
+        "global": get_srs_digest(GLOBAL_SRS),
+        "fixer": get_srs_digest(FIXER_SRS),
+    }
+
+
+def _triage_from_artifacts(loader: ArtifactLoader) -> TriageResult:
+    bundle, fault = loader.load()
+    if fault is not None:
+        return fault
+
+    engine = TriageEngine()
+    return engine.classify(bundle)
+
+
+def _maybe_generate_patch(
+    triage: TriageResult, workspace: Path, dry_run: bool, auto_fix_ready: bool
+) -> Optional[PatchProposal]:
+    if not auto_fix_ready or dry_run:
+        return None
+    generator = DiffGenerator()
+    return generator.generate_minimal_patch(triage, workspace)
+
+
+def _build_triage_log(
+    args: argparse.Namespace,
+    triage: TriageResult,
+    patch: Optional[PatchProposal],
+    srs_metadata: Dict[str, str],
+) -> Dict[str, object]:
+    decision = "triage_only"
+    if patch and patch.passes_safety_checks and not args.dry_run:
+        decision = "auto_fix"
+    elif patch and not patch.passes_safety_checks:
+        decision = "blocked"
+
+    diff_hash = ""
+    if patch and patch.passes_safety_checks:
+        diff_hash = hashlib.sha256(patch.diff_text.encode("utf-8")).hexdigest()
+
+    log = {
+        "run_id": args.run_id,
+        "workflow": args.ci_workflow,
+        "job_name": args.job_name,
+        "branch": args.branch,
+        "fault_category": triage.fault_category.value,
+        "severity": triage.severity.value,
+        "auto_fix_allowed": triage.auto_fix_allowed,
+        "auto_fix_applied": bool(patch and patch.passes_safety_checks and not args.dry_run),
+        "summary": triage.summary,
+        "srs_references": triage.srs_references,
+        "srs_digests": srs_metadata,
+        "evidence": triage.evidence,
+        "blocked_reasons": triage.blockers,
+        "decision": decision,
+        "violated_invariants": triage.blockers,
+        "rationale": triage.summary,
+        "diff_hash": diff_hash,
+        "drift_flag": triage.fault_category == FaultCategory.SPEC_DRIFT,
+        "required_srs_update": triage.fault_category == FaultCategory.SPEC_DRIFT,
+    }
+    if patch:
+        log["patch_proposal"] = {
+            "files_changed": [str(p) for p in patch.files_changed],
+            "passes_safety_checks": patch.passes_safety_checks,
+            "notes": patch.notes,
+        }
+        if patch.passes_safety_checks:
+            log["patch_proposal"]["diff_text"] = patch.diff_text
+    return log
 
 
 def main() -> int:
-  args = parse_args()
-  cfg = load_config()
-  cfg.ensure_log_dir()
+    args = parse_args()
 
-  if not cfg.auto_fix_enabled:
-    print("Auto-fix disabled via configuration; exiting.")
+    loader = ArtifactLoader(run_id=args.run_id, log_dir=Path(args.log_dir))
+    triage = _triage_from_artifacts(loader)
+
+    auto_fix_ready = _auto_fix_enabled() and triage.auto_fix_allowed
+    patch = _maybe_generate_patch(triage, Path("."), args.dry_run, auto_fix_ready)
+
+    pr_builder = PRBuilder()
+    pr_body = pr_builder.build_pr(args.run_id, triage, patch)
+
+    triage_log = _build_triage_log(args, triage, patch, _srs_metadata())
+    triage_log["pr_body"] = pr_body
+
+    log_path = write_json_log(Path("logs") / "fixer_agent", args.run_id, triage_log)
+
+    log_info(
+        "FixerAgent triage complete",
+        run_id=args.run_id,
+        fault_category=triage.fault_category.value,
+        severity=triage.severity.value,
+        auto_fix_applied=triage_log["auto_fix_applied"],
+    )
+    if not triage.auto_fix_allowed:
+        log_warning("Auto-fix not permitted for this fault.", reason=triage.summary)
+    if patch and not patch.passes_safety_checks:
+        log_error("Patch failed safety checks", notes=patch.notes)
+    log_info("Triage log written", path=str(log_path))
+
     return 0
-
-  log_dir = pathlib.Path(args.log_dir)
-  log_text = read_logs(log_dir)
-  failure_type = classify_failure(log_text)
-  snippet = log_text[-1000:] if log_text else ""
-  patch_plan = build_patch_plan(failure_type, snippet)
-  srs_data = load_srs()
-
-  branch_name = f"auto/fix/{failure_type.value}/{args.run_id}"
-  pr_title = "[FixerAgent] Auto-fix CI failure"
-  triage = {
-    "timestamp": datetime.utcnow().isoformat() + "Z",
-    "ci_workflow": args.ci_workflow,
-    "job_name": args.job_name,
-    "branch": args.branch,
-    "run_id": args.run_id,
-    "failure_type": failure_type.value,
-    "patch_plan": {
-      "summary": patch_plan.summary,
-      "recommended_actions": patch_plan.recommended_actions,
-      "test_commands": patch_plan.test_commands,
-    },
-    "proposed_branch": branch_name,
-    "pr_title": pr_title,
-    "srs_sha256": srs_data.sha256,
-    "srs_path": str(srs_data.path),
-    "dry_run": args.dry_run,
-    "max_auto_patch_lines": cfg.max_auto_patch_lines,
-    "blocked_paths": cfg.blocked_paths,
-    "test_command_override": args.test_command,
-  }
-
-  log_path = write_json_log(cfg.log_dir, f"fixer_agent_{args.run_id}", triage)
-  print(f"FixerAgent triage recorded at {log_path}")
-  print(f"Failure classified as {failure_type.value}. Suggested branch: {branch_name}")
-  print(f"Recommended actions:\n- " + "\n- ".join(patch_plan.recommended_actions))
-  if args.dry_run:
-    print("Dry-run mode enabled; no patch was generated.")
-
-  return 0
 
 
 if __name__ == "__main__":
-  sys.exit(main())
+    raise SystemExit(main())

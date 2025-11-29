@@ -1,0 +1,6 @@
+2024-03-18T12:25:57Z  Compare SRS digests
+SRS checksum mismatch detected
+expected 3f2b6c8bc1d98a5f0d17f98bf932665e6cf18354
+got      5a1c448e4fb72f37aa2c4437c4a8990c2ed1d8c0
+spec drift detected: FixerAgent SRS no longer matches Global SRS reference
+Error: Process completed with exit code 1.

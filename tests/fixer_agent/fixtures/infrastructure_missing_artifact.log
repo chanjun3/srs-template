@@ -1,0 +1,8 @@
+2024-03-18T09:14:22Z  Download workflow logs
+/usr/bin/gh run download 1234567890 \
+  --repo acme/docs \
+  --name srs-ci-logs \
+  --dir tmp/ci_logs
+error: artifact 'srs-ci-logs' was not found for run 1234567890
+exit status 1
+Error: Process completed with exit code 1.

@@ -1,0 +1,9 @@
+2024-03-18T11:25:02Z  Run npm run lint:md
+
+> npm run lint:md
+> markdownlint "**/*.md"
+
+README.md:87 MD047 No newline at end of file
+npm ERR! code 1
+npm ERR! markdownlint failed
+Error: Process completed with exit code 1.

@@ -1,0 +1,8 @@
+2024-03-18T12:02:44Z  Run flake8
+flake8 src --count --show-source --statistics
+
+src/util/text.py:15:1: E302 expected 2 blank lines, found 1
+def normalize(text):
+^
+1     E302 expected 2 blank lines, found 1
+Error: Process completed with exit code 1.

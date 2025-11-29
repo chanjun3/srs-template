@@ -1,0 +1,6 @@
+2024-03-18T12:47:09Z  Run custom validation
+Traceback (most recent call last):
+  File "/tmp/ci_logs/run_validation.py", line 48, in <module>
+    raise ValueError("unexpected payload structure")
+ValueError: unexpected payload structure
+Error: Process completed with exit code 1.

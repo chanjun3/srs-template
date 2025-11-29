@@ -1,0 +1,8 @@
+2024-03-18T11:48:30Z  Run yamllint
+yamllint .github/workflows/lint.yml
+
+.github/workflows/lint.yml
+  28:11      warning  too many spaces inside braces  (braces)
+  47:3       error    syntax error: could not find expected ':'  (syntax)
+yamllint: found 1 error and 1 warning
+Error: Process completed with exit code 1.
