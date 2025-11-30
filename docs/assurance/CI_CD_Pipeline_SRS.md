@@ -165,3 +165,22 @@ C:\Users\jun1_\Desktop\System Requirements Specification Template\50_Quality_Ass
 ## Reference Links
 
 - docs/spec_os/srs.md
+## 11. Self-Healing CI/CD Requirements
+### 11.1 Silent Invalidation Detection & Prevention
+- すべての lint/test workflows は `if: always()` を活用してログ生成と artifact アップロードを保証し、静かな失敗（silent invalidation）を防止しなければならない。
+- GitHub Actions の `workflow_run` イベントに現れない実行は無効と見なし、Failure の根本原因を再発防止記録に残さなければならない。
+- FixerAgent 起動ワークフローは、上流の `Debug AI Agent Automation` 実行から `conclusion` フィールドを継承し、`failure` 以外では自動修復を試みてはならない。
+### 11.2 YAML Syntax Invariants
+- すべての CI YAML は 2 スペースインデントを必須とし、タブおよび混在インデントを禁止する。
+- `run: |` ブロックの内部インデントは `run` キー基準からの相対スペースを固定し、途中で変化させてはならない。
+- インデント違反は `CI configuration fault` と定義し、FixerAgent および ReviewerAgent は検出時に triage ログへ Critical Fault として記録する。
+### 11.3 Artifact Generation Requirements
+- `Debug AI Agent Automation` は必ず `pytest_output.txt` を生成し、artifact 名 `pytest-logs` としてアップロードしなければならない。
+- Artifact のアップロードステップは `if: always()` を伴い、pytest の成功・失敗に関わらず実行されなければならない。
+- FixerAgent Self-Healing Pipeline は `pytest-logs` artifact の存在を前提条件とし、不足時には auto-fix を試みず Critical Fault を報告する。
+### 11.4 Failure Injection Specification
+- OS 的自己修復検証のため、意図的にテストや lint を失敗させる Failure Injection を許可し、FixerAgent のレジリエンスを定期検証する。
+- Failure Injection 実施時は、対象コミット・再現手順・期待される triage 結果を記録し、SRS 更新サイクルにフィードバックしなければならない。
+### 11.5 Critical Fault Handling
+- Artifact が欠如・破損している場合、FixerAgent は Infrastructure fault として失敗を記録し、OS 全体を停止させることなく graceful degradation で終了しなければならない。
+- Critical Fault の発生は Assurance チームにエスカレーションし、再発防止策を CI/CD SRS と Global SRS に反映させる。

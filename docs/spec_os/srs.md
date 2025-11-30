@@ -61,3 +61,10 @@
 - Silent invalidation SHALL be classified as a Critical SRS Violation and SHALL trigger escalation.
 - A CI workflow that does not appear in GitHub Actions SHALL be deemed invalid and SHALL NOT be processed by FixerAgent.
 - Missing required artifacts SHALL be classified as infrastructure faults and SHALL NOT be attributed to FixerAgent failures.
+## (5) Integration Requirements: Self-Healing Pipeline
+- The upstream workflow titled `Debug AI Agent Automation` SHALL remain immutable in name; downstream triggers SHALL reference the exact string and any renaming requires explicit SRS approval.
+- The upstream workflow SHALL upload an artifact named `pytest-logs` whose contents include the file `pytest_output.txt`; omission of either identifier constitutes a contract breach.
+- Upstream workflows SHALL invoke `pytest` via `set -euo pipefail` and MUST terminate using `exit "${PIPESTATUS[0]}"` (or equivalent) so that non-zero statuses propagate to `workflow_run.conclusion`.
+- The downstream workflow `FixerAgent Self-Healing Pipeline` SHALL trigger exclusively via `workflow_run` events originating from `Debug AI Agent Automation` executions whose `conclusion` equals `failure`.
+- Artifact IO contracts SHALL guarantee that FixerAgent consumes `artifacts/pytest_output.txt` extracted from the `pytest-logs` artifact without renaming the directories or files.
+- The upstream/downstream relationship (Debug AI Agent Automation → FixerAgent Self-Healing Pipeline) SHALL remain one-to-one; additional downstream workflows MUST register independently to avoid ambiguity.
