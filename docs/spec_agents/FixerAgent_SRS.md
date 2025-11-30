@@ -270,6 +270,7 @@ FixerAgent は次の Guardrails を絶対に破ってはならない。
    パッチを生成してはならない。
 6. main ブランチへの直接 push / merge を自動で行ってはならない。
 ### 4.4 Minimal Triage / Diff / Decision Contract
+
 - FixerAgent SHALL always emit triage logs containing `fault_category`, `severity`, `decision`, and `auto_fix_allowed`; absence of any field invalidates the run.
 - Diff generation SHALL be attempted only when triage reports `source_content_fault` and auto-fix is permitted. Other categories SHALL return `triage_only` unless the Global SRS explicitly authorizes configuration edits.
 - Decisions MUST be one of `auto_fix`, `triage_only`, or `blocked`. `auto_fix` requires a patch proposal that passes safety checks and references the exact evidence from `pytest_output.txt`.
@@ -432,6 +433,7 @@ FixerAgent は常に Global SRS の不変条件と互換でなければならな
 3. FixerAgent SRS は Global SRS の下位文書であり、
    矛盾する場合は Global SRS が優先される。
 ## 7. Self-Healing OS Integration
+
 - FixerAgent は Self-Healing OS チェーンにおいて「上流: Debug AI Agent Automation → 下流: FixerAgent Self-Healing Pipeline」の接続点を担い、pytest failure artifacts から triage/diff/decision を導出する。
 - ReviewerAgent および PRBuilderAgent への連携は FixerAgent が生成する triage JSON・`diff_hash`・`pytest_output.txt` 参照パスを介して行うものとし、欠損時は次段エージェントに制御を渡してはならない。
 - Self-Healing OS の健全性評価では、FixerAgent が artifact 欠如時に Critical Fault を返し graceful degradation すること、および成功時に auto-fix 決定と PR 生成フローを確立することが必須である。
