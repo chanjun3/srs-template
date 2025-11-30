@@ -187,6 +187,7 @@ FixerAgent が triage / patch 生成を行う前提条件は以下。
    サポート範囲内であること（バージョン不整合は Spec/SRS drift として扱う）。
 
 これらの前提条件が満たされない場合、FixerAgent は
+
 **パッチ生成を行わず、triage ログに fault を記録するのみ**とする。
 
 ### 3.4 Postconditions
