@@ -144,9 +144,13 @@ FixerAgent の入力は次のとおり。
 
 - **必須 artifact: `pytest-logs`**
 
-  - artifact 名は `pytest-logs` に固定する。Legacy CI で `srs-ci-logs` が必要な場合は両方生成してもよいが、FixerAgent Self-Healing Pipeline では `pytest-logs` を最優先で探す。
-  - artifact 内部に `pytest_output.txt` が含まれていなければならず、最終的に `artifacts/pytest_output.txt` として展開できること。
-  - artifact が欠如・破損している場合、FixerAgent は `infrastructure_fault` として triage ログを出力し、auto-fix を中断する。
+  - artifact 名は `pytest-logs` に固定する。Legacy CI で `srs-ci-logs` が必要な場合は
+    両方生成してもよいが、FixerAgent Self-Healing Pipeline では `pytest-logs` を最優先で
+    探す。
+  - artifact 内部に `pytest_output.txt` が含まれていなければならず、最終的に
+    `artifacts/pytest_output.txt` として展開できること。
+  - artifact が欠如・破損している場合、FixerAgent は `infrastructure_fault` として
+    triage ログを出力し、auto-fix を中断する。
 
 - **ログファイル**
 
@@ -185,7 +189,8 @@ FixerAgent の出力は次のとおり。
 FixerAgent が triage / patch 生成を行う前提条件は以下。
 
 1. `workflow_run` が GitHub Actions 上で確認できること。
-2. artifact `pytest-logs` が存在し、`pytest_output.txt` が含まれること。（レガシー互換として `srs-ci-logs` + `ci-summary.log` の追加提供は許可するが、省略は不可。）
+2. artifact `pytest-logs` が存在し、`pytest_output.txt` が含まれること。
+   （レガシー互換として `srs-ci-logs` + `ci-summary.log` の追加提供は許可するが、省略は不可。）
 3. Global SRS で定義された CI Syntax Invariants に
    workflow YAML が違反していないこと
    （Syntax Invariant そのものが壊れている場合は Config fault として扱い、
@@ -204,8 +209,9 @@ FixerAgent 実行後は以下が保証される。
 1. `workflow_run` ごとに 1 つ以上の triage ログ JSON が生成されている。
 2. パッチ生成可能なケースでは、
    - diff が Gate Rules / Syntax Rules / Global SRS に準拠している。
-   - patch を含む PR が作成されているか、
-     生成を断念した理由が triage ログに記録されている。
+    - patch を含む PR が作成されているか、
+      生成を断念した理由が triage ログに記録されている。
+
 3. パッチ生成不可能なケース（unknown や infra fault 等）でも、
    必ず fault_category と理由が triage ログに残る。
 
@@ -282,12 +288,20 @@ FixerAgent は次の Guardrails を絶対に破ってはならない。
    パッチを生成してはならない。
 
 6. main ブランチへの直接 push / merge を自動で行ってはならない。
+
 ### 4.4 Minimal Triage / Diff / Decision Contract
 
-- FixerAgent SHALL always emit triage logs containing `fault_category`, `severity`, `decision`, and `auto_fix_allowed`; absence of any field invalidates the run.
-- Diff generation SHALL be attempted only when triage reports `source_content_fault` and auto-fix is permitted. Other categories SHALL return `triage_only` unless the Global SRS explicitly authorizes configuration edits.
-- Decisions MUST be one of `auto_fix`, `triage_only`, or `blocked`. `auto_fix` requires a patch proposal that passes safety checks and references the exact evidence from `pytest_output.txt`.
-- Every successful `auto_fix` decision SHALL append a deterministic `diff_hash` so ReviewerAgent / PRBuilder can verify patch integrity downstream.
+- FixerAgent SHALL always emit triage logs containing `fault_category`,
+  `severity`, `decision`, and `auto_fix_allowed`; absence of any field invalidates
+  the run.
+- Diff generation SHALL be attempted only when triage reports
+  `source_content_fault` and auto-fix is permitted. Other categories SHALL return
+  `triage_only` unless the Global SRS explicitly authorizes configuration edits.
+- Decisions MUST be one of `auto_fix`, `triage_only`, or `blocked`. `auto_fix`
+  requires a patch proposal that passes safety checks and references the exact
+  evidence from `pytest_output.txt`.
+- Every successful `auto_fix` decision SHALL append a deterministic `diff_hash`
+  so ReviewerAgent / PRBuilder can verify patch integrity downstream.
 
 ### 4.3 Triage Decision Derivation
 
@@ -451,8 +465,15 @@ FixerAgent は常に Global SRS の不変条件と互換でなければならな
 
 3. FixerAgent SRS は Global SRS の下位文書であり、
    矛盾する場合は Global SRS が優先される。
+
 ## 7. Self-Healing OS Integration
 
-- FixerAgent は Self-Healing OS チェーンにおいて「上流: Debug AI Agent Automation → 下流: FixerAgent Self-Healing Pipeline」の接続点を担い、pytest failure artifacts から triage/diff/decision を導出する。
-- ReviewerAgent および PRBuilderAgent への連携は FixerAgent が生成する triage JSON・`diff_hash`・`pytest_output.txt` 参照パスを介して行うものとし、欠損時は次段エージェントに制御を渡してはならない。
-- Self-Healing OS の健全性評価では、FixerAgent が artifact 欠如時に Critical Fault を返し graceful degradation すること、および成功時に auto-fix 決定と PR 生成フローを確立することが必須である。
+- FixerAgent は Self-Healing OS チェーンにおいて「上流: Debug AI Agent Automation →
+  下流: FixerAgent Self-Healing Pipeline」の接続点を担い、pytest failure artifacts
+  から triage/diff/decision を導出する。
+- ReviewerAgent および PRBuilderAgent への連携は FixerAgent が生成する triage
+  JSON・`diff_hash`・`pytest_output.txt` 参照パスを介して行うものとし、欠損時は次段
+  エージェントに制御を渡してはならない。
+- Self-Healing OS の健全性評価では、FixerAgent が artifact 欠如時に Critical Fault を
+  返し graceful degradation すること、および成功時に auto-fix 決定と PR 生成フローを
+  確立することが必須である。
