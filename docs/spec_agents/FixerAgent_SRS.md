@@ -209,8 +209,8 @@ FixerAgent 実行後は以下が保証される。
 1. `workflow_run` ごとに 1 つ以上の triage ログ JSON が生成されている。
 2. パッチ生成可能なケースでは、
    - diff が Gate Rules / Syntax Rules / Global SRS に準拠している。
-    - patch を含む PR が作成されているか、
-      生成を断念した理由が triage ログに記録されている。
+   - patch を含む PR が作成されているか、
+     生成を断念した理由が triage ログに記録されている。
 
 3. パッチ生成不可能なケース（unknown や infra fault 等）でも、
    必ず fault_category と理由が triage ログに残る。
