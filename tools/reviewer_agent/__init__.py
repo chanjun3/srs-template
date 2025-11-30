@@ -1,1 +1,1 @@
-# ReviewerAgent package marker.
+"""ReviewerAgent package."""

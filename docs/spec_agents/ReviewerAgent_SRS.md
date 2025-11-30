@@ -88,6 +88,7 @@ ReviewerAgent の評価順序は次の厳格なステップに従う。
 }
 ```
 
-3. ReviewerAgent 自身のルールセットは Global SRS や FixerAgent SRS が更新された際に即座に同期され、進行中のレビューにも遡及して適用される。
-4. ReviewerAgent の行動は常に非破壊的であり、パッチの適用／拒否以外の副作用（ファイル変更、artifact 生成）を起こしてはならない。
-5. 定期的に ReviewerAgent と FixerAgent の連携テストを実施し、Spec 変更に伴う回帰を防ぐ。テストケースには Source/Content fault、CI configuration fault、Infrastructure fault、Spec drift、Unknown fault を含め、最新 SRS に合わせて retroactive に更新する。
+1. ReviewerAgent 自身のルールセットは Global SRS や FixerAgent SRS が更新された際に即座に同期され、進行中のレビューにも遡及して適用される。
+2. ReviewerAgent の行動は常に非破壊的であり、パッチの適用／拒否以外の副作用（ファイル変更、artifact 生成）を起こしてはならない。
+3. 定期的に ReviewerAgent と FixerAgent の連携テストを実施し、
+   Spec 変更に伴う回帰を防ぐ。テストケースには Source/Content fault、CI configuration fault、Infrastructure fault、Spec drift、Unknown fault を含め、最新 SRS に合わせて retroactive に更新する。

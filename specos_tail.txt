@@ -1,0 +1,3 @@
+120:- The upstream/downstream relationship (Debug AI Agent Automation →
+121:  FixerAgent Self-Healing Pipeline) SHALL remain one-to-one; additional
+122:  downstream workflows MUST register independently to avoid ambiguity.

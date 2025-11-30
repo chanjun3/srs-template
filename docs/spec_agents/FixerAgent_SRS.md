@@ -11,6 +11,7 @@ FixerAgent は、CI（GitHub Actions）において lint / format / JSON / link 
 - 失敗原因を分類（triage）し、
 - Global SRS / Syntax Rules / Gate Rules に完全準拠した
   「最小差分（minimal diff）」の修復パッチ案を生成し、
+
 - 自身で一次検証を行ったうえで Pull Request を作成する
 
 自己修復エージェントである。
@@ -27,10 +28,9 @@ FixerAgent の対象範囲は、以下を満たす CI workflow_run に限定さ�
 
 - GitHub Actions 上で実行された lint / validation 系ワークフロー。
 - Global SRS で定義された CI Syntax Invariants を満たす YAML 設定。
-- CI 実行結果として、GitHub Actions の artifact
-  `srs-ci-logs` が生成されているもの。
-- `srs-ci-logs` artifact の内容に
-  `${{ github.workspace }}/ci-summary.log` が含まれているもの。
+- CI 実行結果として、GitHub Actions の artifact `pytest-logs` が生成されているもの。
+  （レガシー互換として `srs-ci-logs` を同梱してもよいが、新規パイプラインは `pytest-logs` を必須とする。）
+- `pytest-logs` artifact の内容に `pytest_output.txt` が含まれており、FixerAgent が triage・diff 生成の一次ログとして参照できること。
 
 ### 1.3 Out-of-scope
 
@@ -38,9 +38,11 @@ FixerAgent は以下には作用しない。
 
 - GitHub Actions に workflow_run が出現していないジョブ
   （Global SRS 上「invalid workflow」として扱われるもの）。
-- `srs-ci-logs` artifact が存在しない、または破損している実行。
+
+- `pytest-logs` artifact（互換: `srs-ci-logs`）が存在しない、または破損している実行。
 - 本番環境でのランタイム障害や外部サービス障害など、
   CI 外のインシデント。
+
 - SRS で明示されていない他リポジトリの CI ワークフロー。
 - 手動実行されたローカルスクリプト・ローカルテストの失敗。
 
@@ -59,6 +61,7 @@ FixerAgent のコア責務は以下とする。
 1. CI ログからのエラー原因解析と fault classification。
 1. Global SRS / Syntax Rules / Gate Rules に準拠した
    最小修復パッチ（minimal diff）の提案。
+
 1. 自己チェック（lint / format / schema 等）による安全性確認。
 1. JSON 形式の triage ログの永続化。
 1. 自動 PR の作成と ReviewerAgent / 人間へのエスカレーション。
@@ -117,10 +120,12 @@ FixerAgent は以下を行ってはならない。
 1. Global SRS で定義された CI Syntax Invariants を変更緩和すること。
 1. SRS / ポリシー文書の内容をリライトすること
    （誤字修正などの明確なエラー修正を除く）。
+
 1. Gate Rules 違反を含むパッチ案を出力すること。
 1. main ブランチに対して直接 merge を実行すること。
 1. 対象外の CI workflows（artifact 不在、silent invalidation 等）に対して
    パッチ生成を試みること。
+
 1. 「より良さそう」という主観のみを理由とした改善パッチ
    （仕様変更・大規模リファクタ）を提案すること。
 
@@ -135,20 +140,22 @@ FixerAgent の入力は次のとおり。
 - **workflow_run イベント**
 
   - GitHub Actions からの `workflow_run` payload。
-  - ステータスが failure / cancelled のものを対象とする。
+  なお conclusion が `failure` のもののみを自動修復対象とする。
 
-- **必須 artifact: `srs-ci-logs`**
+- **必須 artifact: `pytest-logs`**
 
-  - artifact 名は `srs-ci-logs` でなければならない。
-  - artifact には `${{ github.workspace }}/ci-summary.log` が
-    そのパスのまま含まれていなければならない。
-  - Global SRS により、この artifact の存在は
-    FixerAgent triage の必須前提条件と定義される。
+  - artifact 名は `pytest-logs` に固定する。Legacy CI で `srs-ci-logs` が必要な場合は
+    両方生成してもよいが、FixerAgent Self-Healing Pipeline では `pytest-logs` を最優先で
+    探す。
+  - artifact 内部に `pytest_output.txt` が含まれていなければならず、最終的に
+    `artifacts/pytest_output.txt` として展開できること。
+  - artifact が欠如・破損している場合、FixerAgent は `infrastructure_fault` として
+    triage ログを出力し、auto-fix を中断する。
 
 - **ログファイル**
 
-  - `ci-summary.log`（必須）。
-  - GitHub Actions の step / job ログ（取得可能な範囲）。
+  - `pytest_output.txt`（必須）。
+  - 任意の補助ログ（`ci-summary.log` など）を参照し、triage 補強データとして記録する。
 
 ### 3.2 Outputs
 
@@ -182,7 +189,8 @@ FixerAgent の出力は次のとおり。
 FixerAgent が triage / patch 生成を行う前提条件は以下。
 
 1. `workflow_run` が GitHub Actions 上で確認できること。
-2. artifact `srs-ci-logs` が存在し、`ci-summary.log` が含まれること。
+2. artifact `pytest-logs` が存在し、`pytest_output.txt` が含まれること。
+   （レガシー互換として `srs-ci-logs` + `ci-summary.log` の追加提供は許可するが、省略は不可。）
 3. Global SRS で定義された CI Syntax Invariants に
    workflow YAML が違反していないこと
    （Syntax Invariant そのものが壊れている場合は Config fault として扱い、
@@ -191,6 +199,7 @@ FixerAgent が triage / patch 生成を行う前提条件は以下。
    サポート範囲内であること（バージョン不整合は Spec/SRS drift として扱う）。
 
 これらの前提条件が満たされない場合、FixerAgent は
+
 **パッチ生成を行わず、triage ログに fault を記録するのみ**とする。
 
 ### 3.4 Postconditions
@@ -199,9 +208,10 @@ FixerAgent 実行後は以下が保証される。
 
 1. `workflow_run` ごとに 1 つ以上の triage ログ JSON が生成されている。
 2. パッチ生成可能なケースでは、
-   - diff が Gate Rules / Syntax Rules / Global SRS に準拠している。
-   - patch を含む PR が作成されているか、
-     生成を断念した理由が triage ログに記録されている。
+    - diff が Gate Rules / Syntax Rules / Global SRS に準拠している。
+    - patch を含む PR が作成されているか、
+      生成を断念した理由が triage ログに記録されている。
+
 3. パッチ生成不可能なケース（unknown や infra fault 等）でも、
    必ず fault_category と理由が triage ログに残る。
 
@@ -260,19 +270,38 @@ FixerAgent は **パッチ生成 / PR 作成を行ってはならない**。
 
 FixerAgent は次の Guardrails を絶対に破ってはならない。
 
-1. artifact `srs-ci-logs` が欠如する場合、
+1. artifact `pytest-logs`（互換として `srs-ci-logs`）が欠如する場合、
    FixerAgent は実行を中断し、Infrastructure fault として記録する。
+
 2. Global SRS 上で定義される「silent invalidation」
    （ログや artifact が出力されないまま lint workflow が終了するケース）は、
    Critical SRS Violation として即時エスカレーションし、
    FixerAgent はパッチ生成を試みない。
+
 3. GitHub Actions 上に workflow_run が存在しない CI 失敗は
    invalid workflow とみなし、FixerAgent の対象外とする。
+
 4. CI Syntax Invariants（YAML インデント, tabs 禁止 など）を壊す
    変更をパッチに含めてはならない。
+
 5. SRS で許可されていないファイル種別・ディレクトリに対して
    パッチを生成してはならない。
+
 6. main ブランチへの直接 push / merge を自動で行ってはならない。
+
+### 4.4 Minimal Triage / Diff / Decision Contract
+
+- FixerAgent SHALL always emit triage logs containing `fault_category`,
+  `severity`, `decision`, and `auto_fix_allowed`; absence of any field invalidates
+  the run.
+- Diff generation SHALL be attempted only when triage reports
+  `source_content_fault` and auto-fix is permitted. Other categories SHALL return
+  `triage_only` unless the Global SRS explicitly authorizes configuration edits.
+- Decisions MUST be one of `auto_fix`, `triage_only`, or `blocked`. `auto_fix`
+  requires a patch proposal that passes safety checks and references the exact
+  evidence from `pytest_output.txt`.
+- Every successful `auto_fix` decision SHALL append a deterministic `diff_hash`
+  so ReviewerAgent / PRBuilder can verify patch integrity downstream.
 
 ### 4.3 Triage Decision Derivation
 
@@ -281,8 +310,10 @@ FixerAgent の triage 決定は次の流れで導出される。
 1. `ci-summary.log` および対象 Step ログからエラー行を抽出。
 1. 事前定義されたルールセット（エラーコード / メッセージパターン）により
    各 fault_category のスコアを算出。
+
 1. 最もスコアの高いカテゴリを暫定 classification とし、
    補助情報（対象ファイル拡張子 / 行番号 / YAML or JSON etc.）で微調整。
+
 1. 最終的な `fault_category` と `severity` を決定し、
    triage ログと PR body に反映する。
 
@@ -400,8 +431,10 @@ FixerAgent または CI 周りで重大インシデントが発生した場合�
    - root cause
    - 既存 SRS / CI 設定の不足点
    を整理する。
+
 1. 必要であれば Global SRS / FixerAgent SRS のいずれかに
    新たな不変条件やガードレールを追加する。
+
 1. SRS 改訂後、該当ケースを再現する
    Controlled Failure Test を追加し、回帰を防止する。
 
@@ -425,8 +458,22 @@ FixerAgent は常に Global SRS の不変条件と互換でなければならな
 
 1. Global SRS 側の CI Syntax Invariants / Interface Contract / Observability 定義に
    変更が入った場合、FixerAgent SRS は追随して更新されること。
+
 2. FixerAgent の動作が Global SRS の定義と矛盾することが判明した場合、
    FixerAgent は当該ケースでの auto-fix を停止し、
    「Spec Update Required」として SRS 改訂を最優先とすること。
+
 3. FixerAgent SRS は Global SRS の下位文書であり、
    矛盾する場合は Global SRS が優先される。
+
+## 7. Self-Healing OS Integration
+
+- FixerAgent は Self-Healing OS チェーンにおいて「上流: Debug AI Agent Automation →
+  下流: FixerAgent Self-Healing Pipeline」の接続点を担い、pytest failure artifacts
+  から triage/diff/decision を導出する。
+- ReviewerAgent および PRBuilderAgent への連携は FixerAgent が生成する triage
+  JSON・`diff_hash`・`pytest_output.txt` 参照パスを介して行うものとし、欠損時は次段
+  エージェントに制御を渡してはならない。
+- Self-Healing OS の健全性評価では、FixerAgent が artifact 欠如時に Critical Fault を
+  返し graceful degradation すること、および成功時に auto-fix 決定と PR 生成フローを
+  確立することが必須である。

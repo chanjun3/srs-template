@@ -1,0 +1,16 @@
+200:
+201:これらの前提条件が満たされない場合、FixerAgent は
+202:
+203:**パッチ生成を行わず、triage ログに fault を記録するのみ**とする。
+204:
+205:### 3.4 Postconditions
+206:
+207:FixerAgent 実行後は以下が保証される。
+208:
+209:1. `workflow_run` ごとに 1 つ以上の triage ログ JSON が生成されている。
+210:2. パッチ生成可能なケースでは、
+211:   - diff が Gate Rules / Syntax Rules / Global SRS に準拠している。
+212:   - patch を含む PR が作成されているか、
+213:     生成を断念した理由が triage ログに記録されている。
+214:
+215:3. パッチ生成不可能なケース（unknown や infra fault 等）でも、

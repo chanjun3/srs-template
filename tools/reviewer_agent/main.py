@@ -5,10 +5,14 @@ import json
 import pathlib
 import sys
 
-from .analyzer import compute_diff_stats, decide_review, summarize_pr
-from .config import load_config
-from .srs_loader import load_srs
-from ..fixer_agent.log_utils import write_json_log
+PROJECT_ROOT = pathlib.Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+  sys.path.insert(0, str(PROJECT_ROOT))
+
+from tools.reviewer_agent.analyzer import compute_diff_stats, decide_review, summarize_pr
+from tools.reviewer_agent.config import load_config
+from tools.reviewer_agent.srs_loader import load_srs
+from tools.fixer_agent.log_utils import write_json_log
 
 
 def parse_args() -> argparse.Namespace:
