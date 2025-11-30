@@ -1,0 +1,66 @@
+55:
+56:## (1) Syntax Invariants
+57:
+58:- CI YAML indentation SHALL be exactly 2 spaces per nesting level, and any
+59:  deviation invalidates the workflow.
+60:- Tabs, full-width spaces, and mixed indentation sequences SHALL be rejected
+61:  within every YAML rule block.
+62:- `run: |` multi-line command blocks SHALL preserve consistent indentation for
+63:  all included lines relative to the `run` key and SHALL NOT introduce stray
+64:  spacing.
+65:- HEREDOC style sections SHALL close with an indentation that exactly matches
+66:  their opener; mismatched indentation invalidates the block.
+67:- Steps under `jobs.lint.steps` SHALL remain correctly nested; any mis-nesting
+68:  that moves steps outside this hierarchy invalidates the YAML.
+69:
+70:## (2) Failure-Handling Semantics
+71:
+72:- Lint steps that specify `continue-on-error: true` SHALL continue execution
+73:  while still recording failure status for downstream guards.
+74:- A fail guard such as `if: failure()` SHALL be present to ensure the workflow
+75:  reacts deterministically to prior lint failures.
+76:- Steps using `if: always()` for log generation and artifact upload SHALL
+77:  execute regardless of previous outcomes to guarantee evidence capture.
+78:- Always-run steps SHALL only be employed when upstream steps cannot abort the
+79:  job; otherwise the workflow risks silent termination.
+80:
+81:## (3) CIFixerAgent Interface Contract
+82:
+83:- The produced artifact SHALL be named `srs-ci-logs` and no other identifier is
+84:  permitted.
+85:- The artifact contents SHALL include `${{ github.workspace }}/ci-summary.log`
+86:  exactly at that path.
+87:- Presence of the artifact is a REQUIRED precondition for CIFixerAgent triage;
+88:  absence SHALL block FixerAgent execution.
+89:- Any modification to artifact name, path, or structure SHALL be treated as a
+90:  breaking change that requires explicit SRS approval.
+91:
+92:## (4) Observability & Critical Fault Definitions
+93:
+94:- Workflow silent invalidation SHALL be defined as a lint workflow executing
+95:  without emitting logs or artifacts despite configuration requiring them.
+96:- Silent invalidation SHALL be classified as a Critical SRS Violation and SHALL
+97:  trigger escalation.
+98:- A CI workflow that does not appear in GitHub Actions SHALL be deemed invalid
+99:  and SHALL NOT be processed by FixerAgent.
+100:- Missing required artifacts SHALL be classified as infrastructure faults and
+101:  SHALL NOT be attributed to FixerAgent failures.
+102:
+103:## (5) Integration Requirements: Self-Healing Pipeline
+104:
+105:- The upstream workflow titled `Debug AI Agent Automation` SHALL remain
+106:  immutable in name; downstream triggers SHALL reference the exact string and
+107:  any renaming requires explicit SRS approval.
+108:- The upstream workflow SHALL upload an artifact named `pytest-logs` whose
+109:  contents include the file `pytest_output.txt`; omission of either identifier
+110:  constitutes a contract breach.
+111:- Upstream workflows SHALL invoke `pytest` via `set -euo pipefail` and MUST
+112:  terminate using `exit "${PIPESTATUS[0]}"` (or equivalent) so that non-zero
+113:  statuses propagate to `workflow_run.conclusion`.
+114:- The downstream workflow `FixerAgent Self-Healing Pipeline` SHALL trigger
+115:  exclusively via `workflow_run` events originating from `Debug AI Agent
+116:  Automation` executions whose `conclusion` equals `failure`.
+117:- Artifact IO contracts SHALL guarantee that FixerAgent consumes
+118:  `artifacts/pytest_output.txt` extracted from the `pytest-logs` artifact
+119:  without renaming the directories or files.
+120:- The upstream/downstream relationship (Debug AI Agent Automation →
